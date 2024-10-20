@@ -13,7 +13,7 @@ public interface ProductReadRepository extends JpaRepository<Product, Long> {
     List<Product> findLowestPricedProductsByCategory();
 
     @Query("SELECT p.brand.name, SUM(p.price) FROM Product p GROUP BY p.brand ORDER BY SUM(p.price) ASC")
-    List<Object[]> findBrandWithLowestTotalPrice();
+    List<Object[]> findLowestTotalPriceByBrand();
 
     @Query("SELECT p FROM Product p WHERE p.brand.name = :brandName")
     List<Product> findByBrandName(@Param("brandName") String brandName);

@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/v1/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
     /**
-     * 1. 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
+     * 1. 카테고리 별 최저가격인 브랜드와 상품 가격, 총액을 조회하는 API
      * @return
      */
     @GetMapping("/lowest-price/category")
@@ -37,9 +37,8 @@ public class ProductController {
     }
 
     /**
-     * 2. 단일 브랜드로 모든 카테고리 상품을 구매할 때
-     * 최저가격에 판매하는 브랜드와 카테고리의 상품 가격, 총액을 조회하는 API
-     *
+     * 2. 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품 가격, 총액을 조회하는 API
+     * @return
      */
     @GetMapping("/lowest-price/brand")
     public ResponseEntity<?> getLowestPriceByBrand() {
@@ -54,9 +53,11 @@ public class ProductController {
     }
 
     /**
-     * 3. 특정 카테고리에서 최저가격 브랜드와 최고 가격 브랜드를 조회하는 API
+     * 3. 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
+     * @param categoryName
+     * @return
      */
-    @GetMapping("/price-range")
+    @GetMapping("/price-range/category")
     public ResponseEntity<?> getPriceRangeByCategory(@RequestParam String categoryName) {
         try {
             CategoryPriceRangeResponse response = productService.getPriceRangeByCategory(categoryName);

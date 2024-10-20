@@ -65,13 +65,13 @@ Backoffice Service 실행
 ### 4. 실행 및 확인
 #### 4-1. Customer Service 실행
 
-http://localhost:8081/api/products 에서 상품 조회 기능을 사용할 수 있습니다.
+http://localhost:8081/v1/api/products 에서 상품 조회 기능을 사용할 수 있습니다.
 예를 들어 /lowest-price/category로 요청하면 카테고리별 최저 가격 상품을 조회할 수 있습니다.
 
 
 #### 4-2. Backoffice Service 실행
 
-http://localhost:8082/backoffice/products 에서 상품 등록, 수정, 삭제 등의 작업이 가능합니다.
+http://localhost:8082/v1/backoffice/products 에서 상품 등록, 수정, 삭제 등의 작업이 가능합니다.
 
 
 #### 4-3. H2 Console 접속:

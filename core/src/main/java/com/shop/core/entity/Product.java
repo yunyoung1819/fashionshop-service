@@ -1,31 +1,28 @@
 package com.shop.core.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "product")
-@Getter @Setter
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     private int price;
-
-    public Product() {
-    }
 
     @Builder
     public Product(Brand brand, Category category, int price) {

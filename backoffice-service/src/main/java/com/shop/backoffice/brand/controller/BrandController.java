@@ -37,7 +37,7 @@ public class BrandController {
      * @param brandRequest
      * @return
      */
-    @PatchMapping("/brand/{id}")
+    @PatchMapping("/v1/brand/{id}")
     public ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody BrandRequest brandRequest) {
         try {
             brandService.updateBrand(id, brandRequest);

@@ -9,18 +9,12 @@ import java.util.List;
 public class CategoryLowestPriceResponse {
     private List<CategoryPriceInfo> categories;
     private int totalAmount;
-    private String error;
-    private String errorMessage;
 
     public CategoryLowestPriceResponse(List<CategoryPriceInfo> categories, int totalAmount) {
         this.categories = categories;
         this.totalAmount = totalAmount;
     }
 
-    public CategoryLowestPriceResponse(String error, String errorMessage) {
-        this.error = error;
-        this.errorMessage = errorMessage;
-    }
 
     @Getter
     @Setter

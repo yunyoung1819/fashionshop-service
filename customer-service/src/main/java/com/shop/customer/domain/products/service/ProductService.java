@@ -10,10 +10,15 @@ import com.shop.core.entity.Category;
 import com.shop.core.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.shop.customer.domain.products.dto.CategoryLowestPriceResponse.*;
+import static com.shop.customer.domain.products.dto.CategoryPriceRangeResponse.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,51 +28,30 @@ public class ProductService {
 
     private final CategoryReadRepository categoryReadRepository;
 
-    /**
-     * 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
-     * @return
-     */
+    @Transactional(readOnly = true)
     public CategoryLowestPriceResponse getLowestPriceByCategory() {
         List<Product> lowestPriceProducts = productReadRepository.findLowestPricedProductsByCategory();
-        List<CategoryLowestPriceResponse.CategoryPriceInfo> categoryPriceInfos = lowestPriceProducts
-                .stream()
-                .map(prodouct -> new CategoryLowestPriceResponse.CategoryPriceInfo(
-                        prodouct.getCategory().getName(),
-                        prodouct.getBrand().getName(),
-                        prodouct.getPrice()
+
+        Map<String, Product> uniqueLowestPriceProducts = lowestPriceProducts.stream()
+                .collect(Collectors.toMap(p -> p.getCategory().getName(), p -> p, (p1, p2) -> p1.getPrice() < p2.getPrice() ? p1 : p2));
+
+        List<CategoryPriceInfo> categoryPriceInfos = uniqueLowestPriceProducts.values().stream()
+                .map(p -> new CategoryPriceInfo(
+                        p.getCategory().getName(),
+                        p.getBrand().getName(),
+                        p.getPrice()
                 )).collect(Collectors.toList());
 
         int totalAmount = categoryPriceInfos.stream()
-                .mapToInt(CategoryLowestPriceResponse.CategoryPriceInfo::getPrice)
+                .mapToInt(CategoryPriceInfo::getPrice)
                 .sum();
 
         return new CategoryLowestPriceResponse(categoryPriceInfos, totalAmount);
     }
 
-    public Map<String, Object> findLowestPricedCategory() {
-        List<Product> products = productReadRepository.findLowestPricedProductsByCategory();
-        List<Map<String, ? extends Object>> productDetails = products.stream()
-                .map(p -> Map.of(
-                        "category", p.getCategory(),
-                        "brand", p.getBrand(),
-                        "price", p.getPrice()
-                )).collect(Collectors.toList());
-
-        int total = products.stream().mapToInt(Product::getPrice).sum();
-
-        return Map.of(
-                "products", productDetails,
-                "total", total
-        );
-    }
-
-
-    /**
-     * 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품 가격, 총액을 조회하는 API
-     * @return
-     */
+    @Transactional(readOnly = true)
     public LowestPriceResponse getLowestPriceByBrand() {
-        List<Object[]> result = productReadRepository.findBrandWithLowestTotalPrice();
+        List<Object[]> result = productReadRepository.findLowestTotalPriceByBrand();
         if (result.isEmpty()) {
             throw new RuntimeException("No brands found.");
         }
@@ -85,12 +69,7 @@ public class ProductService {
         return new LowestPriceResponse(brandPriceInfo);
     }
 
-
-    /**
-     * 특정 카테고리에서 최저가격 브랜드와 최고 가격 브랜드를 조회하는 API
-     * @param categoryName
-     * @return
-     */
+    @Transactional(readOnly = true)
     public CategoryPriceRangeResponse getPriceRangeByCategory(String categoryName) {
         Category category = categoryReadRepository.findByName(categoryName)
                 .orElseThrow(() -> new RuntimeException("Category not found: " + categoryName));
@@ -98,14 +77,14 @@ public class ProductService {
         List<Product> lowestPriceProducts = productReadRepository.findLowestPricedProductsByCategoryName(categoryName);
         List<Product> highestPriceProducts = productReadRepository.findHighestPricedProductsByCategoryName(categoryName);
 
-        List<CategoryPriceRangeResponse.PriceInfo> lowestPriceInfo = lowestPriceProducts.stream()
-                .map(p -> new CategoryPriceRangeResponse.PriceInfo(
+        List<PriceInfo> lowestPriceInfo = lowestPriceProducts.stream()
+                .map(p -> new PriceInfo(
                         p.getBrand().getName(),
                         p.getPrice()
                 )).toList();
 
-        List<CategoryPriceRangeResponse.PriceInfo> highestPriceInfo = highestPriceProducts.stream()
-                .map(p -> new CategoryPriceRangeResponse.PriceInfo(
+        List<PriceInfo> highestPriceInfo = highestPriceProducts.stream()
+                .map(p -> new PriceInfo(
                         p.getBrand().getName(),
                         p.getPrice()
                 )).toList();
