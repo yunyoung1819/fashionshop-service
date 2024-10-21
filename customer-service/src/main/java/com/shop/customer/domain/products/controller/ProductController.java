@@ -21,10 +21,11 @@ public class ProductController {
     private final ProductService productService;
 
     /**
-     * 1. 카테고리 별 최저가격인 브랜드와 상품 가격, 총액을 조회하는 API
-     * @return
+     * 1. 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
+     *
+     * @return ResponseEntity<?>
      */
-    @GetMapping("/lowest-price/category")
+    @GetMapping("/category/lowest-price")
     public ResponseEntity<?> getLowestPriceByCategory() {
         try {
             CategoryLowestPriceResponse response = productService.getLowestPriceByCategory();
@@ -37,13 +38,15 @@ public class ProductController {
     }
 
     /**
-     * 2. 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품 가격, 총액을 조회하는 API
-     * @return
+     * 2. 단일 브랜드로 모든 카테고리 상품을 구매할 때
+     * 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을 조회하는 API
+     *
+     * @return ResponseEntity<?>
      */
-    @GetMapping("/lowest-price/brand")
-    public ResponseEntity<?> getLowestPriceByBrand() {
+    @GetMapping("/brand/lowest-price")
+    public ResponseEntity<?> getLowestPriceBrand() {
         try {
-            LowestPriceResponse response = productService.getLowestPriceByBrand();
+            LowestPriceResponse response = productService.getLowestPriceBrand();
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse("Failed to retrieve data", e.getMessage());
@@ -54,13 +57,14 @@ public class ProductController {
 
     /**
      * 3. 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
+     *
      * @param categoryName
-     * @return
+     * @return ResponseEntity<?>
      */
-    @GetMapping("/price-range/category")
-    public ResponseEntity<?> getPriceRangeByCategory(@RequestParam String categoryName) {
+    @GetMapping("/category/price-range")
+    public ResponseEntity<?> getPriceRange(@RequestParam String categoryName) {
         try {
-            CategoryPriceRangeResponse response = productService.getPriceRangeByCategory(categoryName);
+            CategoryPriceRangeResponse response = productService.getPriceRangeByCategoryName(categoryName);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse("Failed to retrieve data", e.getMessage());

@@ -20,23 +20,23 @@ public class LowestPriceResponse {
     public static class LowestBrandInfo {
         private String brand;
         private List<BrandPriceInfo.CategoryPrice> categories;
-        private String totalAmount;
+        private int totalAmount;
 
         public LowestBrandInfo(BrandPriceInfo brandPriceInfo) {
             this.brand = brandPriceInfo.getBrand();
             this.categories = brandPriceInfo.getCategories();
-            this.totalAmount = String.format("%,d", brandPriceInfo.getTotalAmount());
+            this.totalAmount = brandPriceInfo.getTotalAmount();
         }
 
         @Getter
         @Setter
         public static class CategoryPrice {
             private String category;
-            private String price;
+            private int price;
 
             public CategoryPrice(String category, int price) {
                 this.category = category;
-                this.price = String.format("%,d", price);
+                this.price = price;
             }
         }
     }

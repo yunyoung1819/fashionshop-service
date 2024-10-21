@@ -3,9 +3,10 @@ package com.shop.core.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Category {
 
     @Id
