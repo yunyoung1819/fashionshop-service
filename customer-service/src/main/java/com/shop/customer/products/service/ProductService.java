@@ -1,11 +1,11 @@
-package com.shop.customer.domain.products.service;
+package com.shop.customer.products.service;
 
-import com.shop.customer.domain.category.repository.CategoryReadRepository;
-import com.shop.customer.domain.products.dto.BrandPriceInfo;
-import com.shop.customer.domain.products.dto.CategoryLowestPriceResponse;
-import com.shop.customer.domain.products.dto.CategoryPriceRangeResponse;
-import com.shop.customer.domain.products.dto.LowestPriceResponse;
-import com.shop.customer.domain.products.repository.ProductReadRepository;
+import com.shop.customer.category.repository.CategoryReadRepository;
+import com.shop.customer.products.dto.BrandPriceInfo;
+import com.shop.customer.products.dto.CategoryLowestPriceResponse;
+import com.shop.customer.products.dto.CategoryPriceRangeResponse;
+import com.shop.customer.products.dto.LowestPriceResponse;
+import com.shop.customer.products.repository.ProductReadRepository;
 import com.shop.core.entity.Category;
 import com.shop.core.entity.Product;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
-import static com.shop.customer.domain.products.dto.CategoryLowestPriceResponse.*;
-import static com.shop.customer.domain.products.dto.CategoryPriceRangeResponse.*;
 import static java.util.stream.Collectors.toMap;
 
 @Service
@@ -39,16 +37,16 @@ public class ProductService {
                         (p1, p2) -> p1.getPrice() < p2.getPrice() ? p1 : p2
                 ));
 
-        List<CategoryPriceInfo> categoryPriceInfo = lowestPriceProducts.values()
+        List<CategoryLowestPriceResponse.CategoryPriceInfo> categoryPriceInfo = lowestPriceProducts.values()
                 .stream()
-                .map(p -> new CategoryPriceInfo(
+                .map(p -> new CategoryLowestPriceResponse.CategoryPriceInfo(
                         p.getCategory().getName(),
                         p.getBrand().getName(),
                         p.getPrice()
                 )).toList();
 
         int totalAmount = categoryPriceInfo.stream()
-                .mapToInt(CategoryPriceInfo::getPrice)
+                .mapToInt(CategoryLowestPriceResponse.CategoryPriceInfo::getPrice)
                 .sum();
 
         return new CategoryLowestPriceResponse(categoryPriceInfo, totalAmount);
@@ -88,15 +86,15 @@ public class ProductService {
         List<Product> lowestPriceProducts = productReadRepository.findLowestPricedProductsByCategoryName(categoryName);
         List<Product> highestPriceProducts = productReadRepository.findHighestPricedProductsByCategoryName(categoryName);
 
-        List<PriceInfo> lowestPriceInfo = toPriceInfo(lowestPriceProducts);
-        List<PriceInfo> highestPriceInfo = toPriceInfo(highestPriceProducts);
+        List<CategoryPriceRangeResponse.PriceInfo> lowestPriceInfo = toPriceInfo(lowestPriceProducts);
+        List<CategoryPriceRangeResponse.PriceInfo> highestPriceInfo = toPriceInfo(highestPriceProducts);
 
         return new CategoryPriceRangeResponse(category.getName(), lowestPriceInfo, highestPriceInfo);
     }
 
-    private List<PriceInfo> toPriceInfo(List<Product> lowestPriceProducts) {
+    private List<CategoryPriceRangeResponse.PriceInfo> toPriceInfo(List<Product> lowestPriceProducts) {
         return lowestPriceProducts.stream()
-                .map(p -> new PriceInfo(p.getBrand().getName(), p.getPrice()))
+                .map(p -> new CategoryPriceRangeResponse.PriceInfo(p.getBrand().getName(), p.getPrice()))
                 .toList();
     }
 }

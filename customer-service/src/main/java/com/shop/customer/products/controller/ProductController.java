@@ -1,10 +1,10 @@
-package com.shop.customer.domain.products.controller;
+package com.shop.customer.products.controller;
 
-import com.shop.customer.common.exception.dto.ErrorResponse;
-import com.shop.customer.domain.products.dto.CategoryLowestPriceResponse;
-import com.shop.customer.domain.products.dto.CategoryPriceRangeResponse;
-import com.shop.customer.domain.products.dto.LowestPriceResponse;
-import com.shop.customer.domain.products.service.ProductService;
+import com.shop.customer.exception.dto.response.ErrorResponse;
+import com.shop.customer.products.dto.CategoryLowestPriceResponse;
+import com.shop.customer.products.dto.CategoryPriceRangeResponse;
+import com.shop.customer.products.dto.LowestPriceResponse;
+import com.shop.customer.products.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

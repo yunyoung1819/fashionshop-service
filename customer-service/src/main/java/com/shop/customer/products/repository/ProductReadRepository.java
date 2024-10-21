@@ -1,4 +1,4 @@
-package com.shop.customer.domain.products.repository;
+package com.shop.customer.products.repository;
 
 import com.shop.core.entity.Product;
 import org.springframework.data.jpa.repository.Query;

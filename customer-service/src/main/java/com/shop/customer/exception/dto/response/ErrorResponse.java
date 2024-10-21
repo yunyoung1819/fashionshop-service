@@ -1,4 +1,4 @@
-package com.shop.customer.common.exception.dto;
+package com.shop.customer.exception.dto.response;
 
 
 import lombok.AllArgsConstructor;
