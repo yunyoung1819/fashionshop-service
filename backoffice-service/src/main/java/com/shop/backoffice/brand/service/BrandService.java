@@ -1,6 +1,6 @@
 package com.shop.backoffice.brand.service;
 
-import com.shop.backoffice.brand.dto.BrandRequest;
+import com.shop.backoffice.brand.dto.request.BrandRequest;
 import com.shop.backoffice.brand.repository.BrandRepository;
 import com.shop.core.entity.Brand;
 import jakarta.transaction.Transactional;

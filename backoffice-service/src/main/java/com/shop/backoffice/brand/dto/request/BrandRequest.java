@@ -1,4 +1,4 @@
-package com.shop.backoffice.brand.dto;
+package com.shop.backoffice.brand.dto.request;
 
 import lombok.Data;
 

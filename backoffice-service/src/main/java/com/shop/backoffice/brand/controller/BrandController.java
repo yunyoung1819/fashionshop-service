@@ -1,6 +1,6 @@
 package com.shop.backoffice.brand.controller;
 
-import com.shop.backoffice.brand.dto.BrandRequest;
+import com.shop.backoffice.brand.dto.request.BrandRequest;
 import com.shop.backoffice.brand.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
