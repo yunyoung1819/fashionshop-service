@@ -8,6 +8,8 @@
 - Spring Boot
 - Datasource
   - H2 Database
+- Cache
+  - Redis
 
 ### 프로젝트 구조
 이 프로젝트는 `core`, `customer-service`, `backoffice-service`세 개의 모듈로 구성되어 있으며, 각 모듈의 역할은 아래와 같습니다.
@@ -153,7 +155,7 @@ INSERT INTO product (brand_id, category_id, price) VALUES
 
 #### 4-4. Product View 화면
 - URL: [http://localhost:8081/v1/customer/products/view](http://localhost:8081/v1/customer/products/view)
-- 이 화면에서는 `카테고리 별 최저 가격 조회`, `브랜드 별 최저 가격 조회`, `카테고리 가격 범위 조회`를 예쁘게 표 형식으로 확인할 수 있습니다.
+- 이 화면에서는 `카테고리 별 최저 가격 조회`, `브랜드 별 최저 가격 조회`, `카테고리 가격 범위 조회`를 테이블 형식으로 확인할 수 있습니다.
 - **참고**: 화면상에서 정상적인 데이터를 확인하기 위해서는 반드시 데이터를 추가해야 합니다. 
 - Swagger API는 정상 동작하지만 화면까지는 구현이 완료되지 않은 상태로 일부 오류가 있을 수 있습니다.
 
