@@ -2,7 +2,7 @@ package com.shop.backoffice.unit.domain.category.service;
 
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
 import com.shop.backoffice.domain.category.service.CategoryService;
-import com.shop.backoffice.domain.category.dto.request.CategoryRequest;
+import com.shop.backoffice.domain.category.model.request.CategoryRequest;
 import com.shop.core.entity.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Fashion Shop</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            width: 100%; /* 로고 이미지를 표 너비와 동일하게 설정 */
+        }
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .btn-blue {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-green {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-orange {
+            background-color: #fd7e14;
+            color: white;
+        }
+        .btn-blue:hover, .btn-green:hover, .btn-orange:hover {
+            color: white;
+        }
+        .table-responsive {
+            width: 100%;
+        }
+        .table {
+            width: 100%;
+            max-width: 100%;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header Section with Logo -->
+    <div class="header">
+        <h1 class="mt-4">Fashion Shop 상품 정보</h1>
+        <p>Fashion Shop의 최저가 상품을 확인해보세요.</p>
+    </div>
+
+    <!-- Error Message Display -->
+    <div id="error-message" class="error-message" style="display: none;">
+        <div class="alert alert-danger" role="alert">
+            오류가 발생했습니다: <span id="error-text"></span>
+        </div>
+    </div>
+
+    <!-- Product Table -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>카테고리</th>
+                <th>브랜드</th>
+                <th>가격</th>
+            </tr>
+            </thead>
+            <tbody id="product-table-body">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <button class="btn btn-blue mr-2" onclick="fetchLowestPriceByCategory()">카테고리 별 최저 가격 조회</button>
+        <button class="btn btn-green mr-2" onclick="fetchLowestPriceBrand()">브랜드 별 최저 가격 조회</button>
+        <button class="btn btn-orange" onclick="fetchCategoryPriceRange()">카테고리 가격 범위 조회</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- JavaScript to Fetch Data from API -->
+<script>
+    function showError(message) {
+        document.getElementById("error-message").style.display = "block";
+        document.getElementById("error-text").innerText = message;
+    }
+
+    function clearError() {
+        document.getElementById("error-message").style.display = "none";
+    }
+
+    function updateTable(products) {
+        const tableBody = document.getElementById("product-table-body");
+        tableBody.innerHTML = "";
+
+        products.forEach(product => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${product.category || "카테고리 없음"}</td>
+                <td>${product.brand || "브랜드 없음"}</td>
+                <td>${product.price.toLocaleString()}원</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    async function fetchLowestPriceByCategory() {
+        clearError();
+        try {
+            const response = await fetch('/v1/customer/products/category/lowest-price');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.categories) {
+                    updateTable(data.categories);
+                } else {
+                    showError("카테고리 데이터를 가져오지 못했습니다.");
+                }
+            } else {
+                showError("카테고리 별 최저 가격 조회에 실패했습니다.");
+            }
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    async function fetchLowestPriceBrand() {
+        clearError();
+        try {
+            const response = await fetch('/v1/customer/products/brand/lowest-price');
+            if (response.ok) {
+                const data = await response.json();
+                const categories = data.lowestPrice.categories.map(item => ({
+                    category: item.category,
+                    brand: data.lowestPrice.brand,
+                    price: item.price
+                }));
+                updateTable(categories);
+            } else {
+                showError("브랜드 별 최저 가격 조회에 실패했습니다.");
+            }
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    async function fetchCategoryPriceRange() {
+        clearError();
+        const categoryName = prompt("조회할 카테고리 이름을 입력하세요:");
+        if (categoryName) {
+            try {
+                const response = await fetch(`/v1/customer/products/category/price-range?categoryName=${encodeURIComponent(categoryName)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const combinedData = [
+                        ...data.lowestPrice.map(item => ({ ...item, brand: "최저가 브랜드" })),
+                        ...data.highestPrice.map(item => ({ ...item, brand: "최고가 브랜드" }))
+                    ];
+                    updateTable(combinedData);
+                } else {
+                    showError("카테고리 가격 범위 조회에 실패했습니다.");
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

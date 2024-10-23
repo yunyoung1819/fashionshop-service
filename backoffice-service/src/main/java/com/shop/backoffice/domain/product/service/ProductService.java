@@ -2,7 +2,7 @@ package com.shop.backoffice.domain.product.service;
 
 import com.shop.backoffice.domain.brand.repository.BrandRepository;
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
-import com.shop.backoffice.domain.product.dto.request.ProductRequest;
+import com.shop.backoffice.domain.product.model.request.ProductRequest;
 import com.shop.backoffice.domain.product.repository.ProductRepository;
 import com.shop.core.entity.Brand;
 import com.shop.core.entity.Category;

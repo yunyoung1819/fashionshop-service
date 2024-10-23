@@ -1,6 +1,6 @@
 package com.shop.backoffice.domain.category.controller;
 
-import com.shop.backoffice.domain.category.dto.request.CategoryRequest;
+import com.shop.backoffice.domain.category.model.request.CategoryRequest;
 import com.shop.backoffice.domain.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -57,13 +57,8 @@ public class CategoryController {
      */
     @DeleteMapping("/category/{id}")
     @Operation(summary = "카테고리 삭제", description = "Deletes an existing category")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
-        try {
-            categoryService.deleteCategory(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Category successfully deleted.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete category: " + e.getMessage());
-        }
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

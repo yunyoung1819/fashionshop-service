@@ -1,16 +1,13 @@
 package com.shop.backoffice.domain.category.service;
 
-import com.shop.backoffice.domain.category.dto.request.CategoryRequest;
+import com.shop.backoffice.domain.category.model.request.CategoryRequest;
 
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
 import com.shop.backoffice.domain.product.repository.ProductRepository;
 import com.shop.core.entity.Category;
-import com.shop.core.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

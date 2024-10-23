@@ -2,7 +2,7 @@ package com.shop.backoffice.unit.domain.brand.service;
 
 import com.shop.backoffice.domain.brand.repository.BrandRepository;
 import com.shop.backoffice.domain.brand.service.BrandService;
-import com.shop.backoffice.domain.brand.dto.request.BrandRequest;
+import com.shop.backoffice.domain.brand.model.request.BrandRequest;
 import com.shop.core.entity.Brand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class BrandServiceTest {
     void createBrandSuccess() {
         BrandRequest request = new BrandRequest("Adidas");
 
-        brandService.addBrand(request);
+        brandService.createBrand(request);
 
         verify(brandRepository, times(1)).save(any(Brand.class));
     }
