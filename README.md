@@ -129,3 +129,11 @@ INSERT INTO product (brand_id, category_id, price) VALUES
 ```
 
 ### 5. API 문서 확인
+
+아래 API는 http://localhost:8081/v1/customer/swagger-ui.html 에서 확인할 수 있습니다.
+- 1. 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
+- 2. 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품 가격, 총액을 조회하는 API
+- 3. 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
+
+아래 API는 http://localhost:8082/v1/backoffice/swagger-ui.html 에서 확인할 수 있습니다.
+- 4. 브랜드 및 상품을 추가 / 업데이트 / 삭제하는 API

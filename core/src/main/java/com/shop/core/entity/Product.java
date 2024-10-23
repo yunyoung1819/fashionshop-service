@@ -24,8 +24,14 @@ public class Product {
 
     private int price;
 
-    @Builder
+    @Builder(toBuilder = true)
     public Product(Brand brand, Category category, int price) {
+        this.brand = brand;
+        this.category = category;
+        this.price = price;
+    }
+
+    public void update(Brand brand, Category category, int price) {
         this.brand = brand;
         this.category = category;
         this.price = price;

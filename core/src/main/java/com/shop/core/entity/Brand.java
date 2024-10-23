@@ -20,8 +20,12 @@ public class Brand {
     @Column(nullable = false)
     private String name;
 
-    @Builder
+    @Builder(toBuilder = true)
     public Brand(String name) {
         this.name = name;
+    }
+
+    public void update(Brand changedBrand) {
+        this.name = changedBrand.name;
     }
 }

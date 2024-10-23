@@ -18,3 +18,11 @@ spring:
     properties:
         hibernate:
             dialect: org.hibernate.dialect.H2Dialect
+springdoc:
+    api-docs:
+        enabled: true
+        path: /v3/api-docs
+    swagger-ui:
+        enabled: true
+        path: /v1/customer/swagger-ui.html
+        url: /v3/api-docs

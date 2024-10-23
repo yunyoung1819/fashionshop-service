@@ -17,8 +17,12 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
-    @Builder
+    @Builder(toBuilder = true)
     public Category(String name) {
         this.name = name;
+    }
+
+    public void update(Category changedCategory) {
+        this.name = changedCategory.name;
     }
 }
