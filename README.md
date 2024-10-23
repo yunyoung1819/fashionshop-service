@@ -8,6 +8,8 @@
 - Spring Boot
 - Datasource
   - H2 Database
+- Cache
+  - Redis
 
 ### 프로젝트 구조
 이 프로젝트는 `core`, `customer-service`, `backoffice-service`세 개의 모듈로 구성되어 있으며, 각 모듈의 역할은 아래와 같습니다.
