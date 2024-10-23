@@ -1,6 +1,6 @@
 package com.shop.backoffice.exception.handler;
 
-import com.shop.customer.exception.model.response.ErrorResponse;
+import com.shop.backoffice.exception.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
