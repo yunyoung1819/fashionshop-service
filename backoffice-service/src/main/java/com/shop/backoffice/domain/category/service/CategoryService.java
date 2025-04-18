@@ -34,7 +34,7 @@ public class CategoryService {
                 .name(categoryRequest.name())
                 .build();
 
-        category.update(changedCategory);
+        category.updateName(changedCategory);
     }
 
     @Transactional

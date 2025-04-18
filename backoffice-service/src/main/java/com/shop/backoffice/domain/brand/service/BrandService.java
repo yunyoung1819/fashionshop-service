@@ -31,7 +31,7 @@ public class BrandService {
                 .name(brandRequest.name())
                 .build();
 
-        brand.update(changedBrand);
+        brand.updateName(changedBrand);
     }
 
 

@@ -3,10 +3,15 @@ package com.shop.core.product.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+/**
+ * 상품 카테고리 정보를 관리하는 엔티티
+ */
+@Entity
+@Table(name = "category")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
+@ToString(of = {"id", "name"})
+@EqualsAndHashCode(of = "id")
 public class Category {
 
     @Id
@@ -14,7 +19,7 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Builder(toBuilder = true)
@@ -22,7 +27,10 @@ public class Category {
         this.name = name;
     }
 
-    public void update(Category changedCategory) {
+    /**
+     * 카테고리명을 수정합니다.
+     */
+    public void updateName(Category changedCategory) {
         this.name = changedCategory.name;
     }
 }
