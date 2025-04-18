@@ -27,7 +27,7 @@
 ## Tech Stack
 
 - **Language & Runtime:** Java 17 (Amazon Corretto)
-- **Framework:** Spring Boot 3.x
+- **Framework:** Spring Boot 3.3.4
 - **Database:** H2 (in-memory)
 - **Cache:** Redis
 - **Build Tool:** Gradle (Wrapper)
