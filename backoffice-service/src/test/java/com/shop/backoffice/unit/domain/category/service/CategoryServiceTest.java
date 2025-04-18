@@ -3,7 +3,7 @@ package com.shop.backoffice.unit.domain.category.service;
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
 import com.shop.backoffice.domain.category.service.CategoryService;
 import com.shop.backoffice.domain.category.model.request.CategoryRequest;
-import com.shop.core.entity.Category;
+import com.shop.core.product.entity.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+
 @SpringBootApplication(scanBasePackages = {"com.shop.core", "com.shop.customer"})
-@EntityScan(basePackages = {"com.shop.core.entity"})
+@EntityScan(basePackages = {"com.shop.core.product.entity"})
 @EnableJpaRepositories(basePackages = {"com.shop.customer"})
 @EnableCaching
 public class CustomerApplication {

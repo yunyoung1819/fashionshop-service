@@ -1,6 +1,6 @@
 package com.shop.backoffice.domain.product.repository;
 
-import com.shop.core.entity.Product;
+import com.shop.core.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

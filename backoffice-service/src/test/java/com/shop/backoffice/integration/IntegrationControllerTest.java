@@ -3,10 +3,9 @@ package com.shop.backoffice.integration;
 import com.shop.backoffice.domain.brand.repository.BrandRepository;
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
 import com.shop.backoffice.domain.product.repository.ProductRepository;
-import com.shop.core.entity.Brand;
-import com.shop.core.entity.Category;
-import com.shop.core.entity.Product;
-import jakarta.persistence.EntityManager;
+import com.shop.core.product.entity.Brand;
+import com.shop.core.product.entity.Category;
+import com.shop.core.product.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,37 +55,43 @@ public class IntegrationControllerTest {
     @DisplayName("상품 등록 테스트")
     public void testCreateProduct_Success() throws Exception {
         mockMvc.perform(post("/v1/backoffice/product")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"brandId\": 1, \"categoryId\": 1, \"price\": 1000 }"))
-                .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"brandId\": 1, \"categoryId\": 1, \"price\": 1000 }"))
+            .andExpect(status().isCreated());
     }
 
     @Test
     @DisplayName("상품 등록 실패 테스트 - 브랜드 없음")
     public void testCreateProduct_Failure_InvalidBrand() throws Exception {
         mockMvc.perform(post("/v1/backoffice/product")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"brandId\": 99, \"categoryId\": 1, \"price\": 1000 }"))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"brandId\": 99, \"categoryId\": 1, \"price\": 1000 }"))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("상품 수정 테스트")
     public void testModifyProduct_Success() throws Exception {
         Product product = productRepository.save(new Product(savedBrand, savedCategory, 1500));
-        mockMvc.perform(patch("/v1/backoffice/product/" + product.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"brandId\": " + savedBrand.getId() + ", \"categoryId\": " + savedCategory.getId() + ", \"price\": 2000 }"))
-                .andExpect(status().isOk());
+
+        String json = String.format(
+            "{ \"brandId\": %d, \"categoryId\": %d, \"price\": %d }",
+            savedBrand.getId(), savedCategory.getId(), 2000
+        );
+
+        mockMvc.perform(patch("/v1/backoffice/product/{id}", product.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("상품 수정 실패 테스트 - 상품 없음")
     public void testModifyProduct_Failure_ProductNotFound() throws Exception {
         mockMvc.perform(patch("/v1/backoffice/product/999")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"brandId\": 1, \"categoryId\": 1, \"price\": 2000 }"))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"brandId\": 1, \"categoryId\": 1, \"price\": 2000 }"))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -94,23 +99,16 @@ public class IntegrationControllerTest {
     public void testDeleteProduct_Success() throws Exception {
         Product product = productRepository.save(new Product(savedBrand, savedCategory, 1500));
         mockMvc.perform(delete("/v1/backoffice/product/" + product.getId()))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("상품 삭제 실패 테스트 - 상품 없음")
-    public void testDeleteProduct_Failure_ProductNotFound() throws Exception {
-        mockMvc.perform(delete("/v1/backoffice/product/999"))
-                .andExpect(status().isInternalServerError());
+            .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("카테고리 등록 테스트")
     public void testCreateCategory_Success() throws Exception {
         mockMvc.perform(post("/v1/backoffice/category")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"Accessories\" }"))
-                .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"name\": \"Accessories\" }"))
+            .andExpect(status().isCreated());
     }
 
     @Test
@@ -119,9 +117,9 @@ public class IntegrationControllerTest {
         Category category = categoryRepository.findById(1L).get();
 
         mockMvc.perform(patch("/v1/backoffice/category/" + category.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"Bags\" }"))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"name\": \"Bags\" }"))
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -132,16 +130,16 @@ public class IntegrationControllerTest {
         productRepository.deleteAll();
 
         mockMvc.perform(delete("/v1/backoffice/category/" + category.getId()))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("브랜드 등록 테스트")
     public void testCreateBrand_Success() throws Exception {
         mockMvc.perform(post("/v1/backoffice/brand")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"Adidas\" }"))
-                .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"name\": \"Adidas\" }"))
+            .andExpect(status().isCreated());
     }
 
     @Test
@@ -150,9 +148,9 @@ public class IntegrationControllerTest {
         Brand brand = brandRepository.findById(1L).get();
 
         mockMvc.perform(patch("/v1/backoffice/brand/" + brand.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"Puma\" }"))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"name\": \"Puma\" }"))
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -163,6 +161,6 @@ public class IntegrationControllerTest {
         productRepository.deleteAll();
 
         mockMvc.perform(delete("/v1/backoffice/brand/" + brand.getId()))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 }

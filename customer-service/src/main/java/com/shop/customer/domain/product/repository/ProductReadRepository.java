@@ -1,6 +1,6 @@
 package com.shop.customer.domain.product.repository;
 
-import com.shop.core.entity.Product;
+import com.shop.core.product.entity.Product;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;

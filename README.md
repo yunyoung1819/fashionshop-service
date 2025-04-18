@@ -78,7 +78,7 @@ Backoffice Service 실행
 - 기능: 상품 등록, 수정, 삭제 등
 #### 4-3. H2 Console 접속
 - URL: http://localhost:8081/h2-console
-- JDBC URL: jdbc:h2:mem:testdb
+- JDBC URL: jdbc:h2:mem:fashiondb
 
 
 #### 4-4. 샘플 데이터 추가 쿼리

@@ -1,4 +1,4 @@
-package com.shop.core.entity;
+package com.shop.core.product.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

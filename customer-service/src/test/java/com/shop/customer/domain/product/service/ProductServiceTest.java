@@ -1,12 +1,12 @@
 package com.shop.customer.domain.product.service;
 
-import com.shop.core.entity.Brand;
-import com.shop.core.entity.Category;
-import com.shop.core.entity.Product;
+import com.shop.core.product.entity.Brand;
+import com.shop.core.product.entity.Category;
+import com.shop.core.product.entity.Product;
 import com.shop.customer.domain.category.repository.CategoryReadRepository;
-import com.shop.customer.domain.product.model.CategoryLowestPriceResponse;
-import com.shop.customer.domain.product.model.CategoryPriceRangeResponse;
-import com.shop.customer.domain.product.model.LowestPriceResponse;
+import com.shop.customer.domain.product.model.response.CategoryLowestPriceResponse;
+import com.shop.customer.domain.product.model.response.CategoryPriceRangeResponse;
+import com.shop.customer.domain.product.model.response.LowestPriceResponse;
 import com.shop.customer.domain.product.repository.ProductReadRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,10 +70,10 @@ class ProductServiceTest {
 
         CategoryLowestPriceResponse response = productService.getLowestPriceByCategory();
 
-        assertEquals("A", response.getCategories().get(0).getBrand());
-        assertEquals("상의", response.getCategories().get(0).getCategory());
-        assertEquals(10000, response.getCategories().get(0).getPrice());
-        assertEquals(10000, response.getTotalAmount());
+        assertEquals("A", response.categories().get(0).brand());
+        assertEquals("상의", response.categories().get(0).category());
+        assertEquals(10000, response.categories().get(0).price());
+        assertEquals(10000, response.totalAmount());
     }
 
     @Test
@@ -83,8 +83,8 @@ class ProductServiceTest {
 
         CategoryLowestPriceResponse response = productService.getLowestPriceByCategory();
 
-        assertEquals(0, response.getCategories().size());
-        assertEquals(0, response.getTotalAmount());
+        assertEquals(0, response.categories().size());
+        assertEquals(0, response.totalAmount());
     }
 
     @Test
@@ -129,15 +129,15 @@ class ProductServiceTest {
         LowestPriceResponse response = productService.getLowestPriceBrand();
 
         assertNotNull(response);
-        assertEquals("A", response.getLowestPrice().getBrand());
-        assertEquals(300000, response.getLowestPrice().getTotalAmount());
-        assertEquals(2, response.getLowestPrice().getCategories().size());
+        assertEquals("A", response.lowestPrice().brand());
+        assertEquals(300000, response.lowestPrice().totalAmount());
+        assertEquals(2, response.lowestPrice().categories().size());
 
-        assertEquals("상의", response.getLowestPrice().getCategories().get(0).getCategory());
-        assertEquals(100000, response.getLowestPrice().getCategories().get(0).getPrice());
+        assertEquals("상의", response.lowestPrice().categories().get(0).category());
+        assertEquals(100000, response.lowestPrice().categories().get(0).price());
 
-        assertEquals("바지", response.getLowestPrice().getCategories().get(1).getCategory());
-        assertEquals(200000, response.getLowestPrice().getCategories().get(1).getPrice());
+        assertEquals("바지", response.lowestPrice().categories().get(1).category());
+        assertEquals(200000, response.lowestPrice().categories().get(1).price());
     }
 
     @Test
@@ -177,17 +177,17 @@ class ProductServiceTest {
         CategoryPriceRangeResponse response = productService.getPriceRangeByCategoryName("상의");
 
         assertNotNull(response);
-        assertEquals("상의", response.getCategory());
+        assertEquals("상의", response.category());
 
         // 최저가 검증
-        assertEquals(1, response.getLowestPrice().size());
-        assertEquals("A", response.getLowestPrice().get(0).getBrand());
-        assertEquals(10000, response.getLowestPrice().get(0).getPrice());
+        assertEquals(1, response.lowestPrice().size());
+        assertEquals("A", response.lowestPrice().get(0).brand());
+        assertEquals(10000, response.lowestPrice().get(0).price());
 
         // 최고가 검증
-        assertEquals(1, response.getHighestPrice().size());
-        assertEquals("B", response.getHighestPrice().get(0).getBrand());
-        assertEquals(20000, response.getHighestPrice().get(0).getPrice());
+        assertEquals(1, response.highestPrice().size());
+        assertEquals("B", response.highestPrice().get(0).brand());
+        assertEquals(20000, response.highestPrice().get(0).price());
     }
 
     @Test

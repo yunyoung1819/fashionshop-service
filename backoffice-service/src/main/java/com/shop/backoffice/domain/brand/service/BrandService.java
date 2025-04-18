@@ -2,7 +2,7 @@ package com.shop.backoffice.domain.brand.service;
 
 import com.shop.backoffice.domain.brand.model.request.BrandRequest;
 import com.shop.backoffice.domain.brand.repository.BrandRepository;
-import com.shop.core.entity.Brand;
+import com.shop.core.product.entity.Brand;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

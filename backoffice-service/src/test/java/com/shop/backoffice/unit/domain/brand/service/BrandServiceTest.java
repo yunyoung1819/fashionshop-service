@@ -3,7 +3,7 @@ package com.shop.backoffice.unit.domain.brand.service;
 import com.shop.backoffice.domain.brand.repository.BrandRepository;
 import com.shop.backoffice.domain.brand.service.BrandService;
 import com.shop.backoffice.domain.brand.model.request.BrandRequest;
-import com.shop.core.entity.Brand;
+import com.shop.core.product.entity.Brand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

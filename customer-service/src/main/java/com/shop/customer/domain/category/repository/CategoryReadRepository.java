@@ -1,6 +1,6 @@
 package com.shop.customer.domain.category.repository;
 
-import com.shop.core.entity.Category;
+import com.shop.core.product.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

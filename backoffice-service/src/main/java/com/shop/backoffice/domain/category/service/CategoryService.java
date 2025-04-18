@@ -4,7 +4,7 @@ import com.shop.backoffice.domain.category.model.request.CategoryRequest;
 
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
 import com.shop.backoffice.domain.product.repository.ProductRepository;
-import com.shop.core.entity.Category;
+import com.shop.core.product.entity.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +41,6 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-        categoryRepository.deleteById(id);
+        categoryRepository.deleteById(category.getId());
     }
 }

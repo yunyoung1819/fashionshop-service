@@ -4,16 +4,19 @@ spring:
   application:
     name: backoffice-service
   datasource:
-    url: jdbc:h2:file:~/testdb
+    url: jdbc:h2:mem:fashiondb;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  sql:
+    init:
+      mode: always
   h2:
     console:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
