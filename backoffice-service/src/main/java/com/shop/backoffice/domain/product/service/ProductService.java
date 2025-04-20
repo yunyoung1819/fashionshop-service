@@ -2,11 +2,11 @@ package com.shop.backoffice.domain.product.service;
 
 import com.shop.backoffice.domain.brand.repository.BrandRepository;
 import com.shop.backoffice.domain.category.repository.CategoryRepository;
-import com.shop.backoffice.domain.product.model.request.ProductRequest;
 import com.shop.backoffice.domain.product.repository.ProductRepository;
 import com.shop.core.product.entity.Brand;
 import com.shop.core.product.entity.Category;
 import com.shop.core.product.entity.Product;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,51 +20,39 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public void createProduct(ProductRequest productRequest) {
+    public Product createProduct(Long brandId, Long categoryId, int price) {
+        Brand brand = brandRepository.findById(brandId)
+            .orElseThrow(() -> new EntityNotFoundException("Brand not found: " + brandId));
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
 
-        Brand brand = findBrand(productRequest);
-
-        Category category = findCategory(productRequest);
-
-        Product product = Product.builder()
-                .brand(brand)
-                .category(category)
-                .price(productRequest.price())
-                .build();
-
-        productRepository.save(product);
-    }
-
-    private Category findCategory(ProductRequest productRequest) {
-        Long categoryId = productRequest.categoryId();
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryId));
-    }
-
-    private Brand findBrand(ProductRequest productRequest) {
-        Long brandId = productRequest.brandId();
-        return brandRepository.findById(brandId)
-                .orElseThrow(() -> new IllegalArgumentException("Brand not found: " + brandId));
+        Product p = Product.builder()
+            .brand(brand)
+            .category(category)
+            .price(price)
+            .build();
+        return productRepository.save(p);
     }
 
     @Transactional
-    public void modifyProduct(Long id, ProductRequest productRequest) {
-        Brand brand = findBrand(productRequest);
-        Category category = findCategory(productRequest);
+    public Product updateProduct(Long id, Long brandId, Long categoryId, int price) {
+        Brand brand = brandRepository.findById(brandId)
+            .orElseThrow(() -> new EntityNotFoundException("Brand not found: " + brandId));
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        Product existing = productRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Product not found: " + id));
 
-        product.update(brand, category, productRequest.price());
-
-        productRepository.save(product);
+        existing.update(brand, category, price);
+        return existing;
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
-        productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found: " + id));
-
+    public void deleteProductById(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new EntityNotFoundException("Product not found: " + id);
+        }
         productRepository.deleteById(id);
     }
 }

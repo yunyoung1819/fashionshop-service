@@ -36,7 +36,7 @@ public class Brand {
     /**
      * 브랜드명을 수정합니다.
      */
-    public void updateName(Brand changedBrand) {
-        this.name = changedBrand.name;
+    public void updateName(String name) {
+        this.name = name;
     }
 }

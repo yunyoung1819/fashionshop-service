@@ -30,7 +30,7 @@ public class Category {
     /**
      * 카테고리명을 수정합니다.
      */
-    public void updateName(Category changedCategory) {
-        this.name = changedCategory.name;
+    public void updateName(String changedName) {
+        this.name = changedName;
     }
 }

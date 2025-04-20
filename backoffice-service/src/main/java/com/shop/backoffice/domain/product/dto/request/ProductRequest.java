@@ -1,4 +1,4 @@
-package com.shop.backoffice.domain.product.model.request;
+package com.shop.backoffice.domain.product.dto.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

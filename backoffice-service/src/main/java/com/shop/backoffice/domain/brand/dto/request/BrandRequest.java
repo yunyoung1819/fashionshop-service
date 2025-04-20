@@ -1,4 +1,4 @@
-package com.shop.backoffice.domain.brand.model.request;
+package com.shop.backoffice.domain.brand.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

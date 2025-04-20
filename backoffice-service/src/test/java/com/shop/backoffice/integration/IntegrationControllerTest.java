@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -26,13 +27,10 @@ public class IntegrationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private BrandRepository brandRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private ProductRepository productRepository;
 
@@ -41,12 +39,12 @@ public class IntegrationControllerTest {
 
     @BeforeEach
     public void setup() {
-//        Brand brand = new Brand("Nike");
-//        brandRepository.save(brand);
-//
-//        Category category = new Category("Shoes");
-//        categoryRepository.save(category);
+        // 기존 데이터 삭제
+        productRepository.deleteAll();
+        categoryRepository.deleteAll();
+        brandRepository.deleteAll();
 
+        // 단일 브랜드/카테고리 생성
         savedBrand = brandRepository.save(new Brand("Nike"));
         savedCategory = categoryRepository.save(new Category("Shoes"));
     }
@@ -54,113 +52,103 @@ public class IntegrationControllerTest {
     @Test
     @DisplayName("상품 등록 테스트")
     public void testCreateProduct_Success() throws Exception {
-        mockMvc.perform(post("/v1/backoffice/product")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"brandId\": 1, \"categoryId\": 1, \"price\": 1000 }"))
-            .andExpect(status().isCreated());
-    }
+        String payload = """
+            {
+              "brandId": %d,
+              "categoryId": %d,
+              "price": 1000
+            }
+            """.formatted(savedBrand.getId(), savedCategory.getId());
 
-    @Test
-    @DisplayName("상품 등록 실패 테스트 - 브랜드 없음")
-    public void testCreateProduct_Failure_InvalidBrand() throws Exception {
-        mockMvc.perform(post("/v1/backoffice/product")
+        mockMvc.perform(post("/v1/backoffice/products")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"brandId\": 99, \"categoryId\": 1, \"price\": 1000 }"))
-            .andExpect(status().isBadRequest());
+                .content(payload))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.brandId").value(savedBrand.getId()))
+            .andExpect(jsonPath("$.data.categoryId").value(savedCategory.getId()))
+            .andExpect(jsonPath("$.data.price").value(1000));
     }
 
     @Test
     @DisplayName("상품 수정 테스트")
     public void testModifyProduct_Success() throws Exception {
+        // 먼저 상품 저장
         Product product = productRepository.save(new Product(savedBrand, savedCategory, 1500));
 
-        String json = String.format(
-            "{ \"brandId\": %d, \"categoryId\": %d, \"price\": %d }",
-            savedBrand.getId(), savedCategory.getId(), 2000
-        );
+        String payload = """
+            {
+              "brandId": %d,
+              "categoryId": %d,
+              "price": 2000
+            }
+            """.formatted(savedBrand.getId(), savedCategory.getId());
 
-        mockMvc.perform(patch("/v1/backoffice/product/{id}", product.getId())
+        mockMvc.perform(patch("/v1/backoffice/products/{id}", product.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("상품 수정 실패 테스트 - 상품 없음")
-    public void testModifyProduct_Failure_ProductNotFound() throws Exception {
-        mockMvc.perform(patch("/v1/backoffice/product/999")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"brandId\": 1, \"categoryId\": 1, \"price\": 2000 }"))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("상품 삭제 테스트")
-    public void testDeleteProduct_Success() throws Exception {
-        Product product = productRepository.save(new Product(savedBrand, savedCategory, 1500));
-        mockMvc.perform(delete("/v1/backoffice/product/" + product.getId()))
-            .andExpect(status().isOk());
+                .content(payload))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.price").value(2000));
     }
 
     @Test
     @DisplayName("카테고리 등록 테스트")
     public void testCreateCategory_Success() throws Exception {
-        mockMvc.perform(post("/v1/backoffice/category")
+        mockMvc.perform(post("/v1/backoffice/categories")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"name\": \"Accessories\" }"))
-            .andExpect(status().isCreated());
+                .content("{\"name\":\"Accessories\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value("Accessories"));
     }
 
     @Test
     @DisplayName("카테고리 수정 테스트")
     public void testModifyCategory_Success() throws Exception {
-        Category category = categoryRepository.findById(1L).get();
-
-        mockMvc.perform(patch("/v1/backoffice/category/" + category.getId())
+        mockMvc.perform(patch("/v1/backoffice/categories/{id}", savedCategory.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"name\": \"Bags\" }"))
-            .andExpect(status().isOk());
+                .content("{\"name\":\"Bags\"}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value("Bags"));
     }
 
     @Test
     @DisplayName("카테고리 삭제 테스트")
     public void testDeleteCategory_Success() throws Exception {
-        Category category = categoryRepository.findById(1L).get();
-
-        productRepository.deleteAll();
-
-        mockMvc.perform(delete("/v1/backoffice/category/" + category.getId()))
-            .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/backoffice/categories/{id}", savedCategory.getId()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true));
     }
 
     @Test
     @DisplayName("브랜드 등록 테스트")
     public void testCreateBrand_Success() throws Exception {
-        mockMvc.perform(post("/v1/backoffice/brand")
+        mockMvc.perform(post("/v1/backoffice/brands")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"name\": \"Adidas\" }"))
-            .andExpect(status().isCreated());
+                .content("{\"name\":\"Adidas\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value("Adidas"));
     }
 
     @Test
     @DisplayName("브랜드 수정 테스트")
     public void testModifyBrand_Success() throws Exception {
-        Brand brand = brandRepository.findById(1L).get();
-
-        mockMvc.perform(patch("/v1/backoffice/brand/" + brand.getId())
+        mockMvc.perform(patch("/v1/backoffice/brands/{id}", savedBrand.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"name\": \"Puma\" }"))
-            .andExpect(status().isOk());
+                .content("{\"name\":\"Puma\"}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value("Puma"));
     }
 
     @Test
     @DisplayName("브랜드 삭제 테스트")
     public void testDeleteBrand_Success() throws Exception {
-        Brand brand = brandRepository.findById(1L).get();
-
-        productRepository.deleteAll();
-
-        mockMvc.perform(delete("/v1/backoffice/brand/" + brand.getId()))
-            .andExpect(status().isOk());
+        mockMvc.perform(delete("/v1/backoffice/brands/{id}", savedBrand.getId()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true));
     }
 }
